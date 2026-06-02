@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: #000;
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  overflow: hidden;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+.cc-choice-btn:hover:not(:disabled) {
+  border-color: var(--cc-btn-hover-border) !important;
+  box-shadow: var(--cc-btn-hover-shadow);
+}
+
+.cc-choice-btn:focus-visible {
+  outline: 2px solid var(--cc-accent);
+  outline-offset: 2px;
+}
+
+.cc-themed {
+  transition:
+    background 0.5s ease,
+    color 0.4s ease,
+    filter 0.5s ease;
+}
+
+/* --- UI Evolution stages (진행도에 따른 셸 진화) --- */
+
+.cc-evolution--text .cc-control-room,
+.cc-evolution--text .cc-creation-canvas {
+  font-family: var(--font-geist-mono), "Courier New", monospace;
+}
+
+.cc-evolution--text .cc-question-card {
+  border-radius: 0;
+  box-shadow: none !important;
+  border-style: dashed;
+}
+
+.cc-evolution--text .cc-story-card {
+  border-radius: 2px;
+  padding: 0;
+}
+
+.cc-evolution--terminal .cc-question-card {
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px var(--cc-accent-glow);
+}
+
+.cc-evolution--terminal .cc-gen-terminal {
+  text-shadow: 0 0 8px var(--cc-accent-glow);
+}
+
+.cc-evolution--window .cc-question-card {
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+}
+
+.cc-evolution--window .cc-story-card {
+  border-radius: 8px;
+}
+
+.cc-evolution--canvas .cc-question-card {
+  border-radius: 12px;
+  box-shadow: 0 8px 32px var(--cc-accent-glow);
+}
+
+.cc-evolution--canvas .cc-story-card {
+  border-radius: 10px;
+}
+
+.cc-evolution--canvas .cc-creation-canvas header {
+  backdrop-filter: blur(8px);
+}
+
+.cc-question-card {
+  border-color: var(--cc-panel-border);
+  background: var(--cc-card-bg);
+  transition:
+    border-radius 0.4s ease,
+    box-shadow 0.4s ease;
+}
