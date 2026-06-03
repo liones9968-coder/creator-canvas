@@ -4,9 +4,77 @@ import { BookOpen, Copy, RefreshCw, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { SynopsisDocument } from "@/components/SynopsisDocument";
 import { useSynopsisGeneration } from "@/hooks/useSynopsisGeneration";
+import { Season2Bridge } from "@/components/Season2Bridge";
+import { BRIDGE_STEP, SEASON2_BRIDGE_STEP } from "@/lib/stageInstructions";
 import { useStoryStore } from "@/store/useStoryStore";
 
+const season2StartButtonClass =
+  "cc-choice-btn flex items-center justify-center gap-2 rounded-md border px-3 py-2.5 font-mono text-sm";
+
+function Season2StartButton() {
+  const startSeason2 = useStoryStore((s) => s.startSeason2);
+  const setWorldName = useStoryStore((s) => s.setWorldName);
+  const [showNameInput, setShowNameInput] = useState(false);
+  const [worldNameInput, setWorldNameInput] = useState("");
+
+  const handleStartSeason2 = () => {
+    if (!worldNameInput.trim()) return;
+    setWorldName(worldNameInput.trim());
+    startSeason2();
+  };
+
+  if (!showNameInput) {
+    return (
+      <button
+        type="button"
+        onClick={() => setShowNameInput(true)}
+        className={season2StartButtonClass}
+        style={{
+          borderColor: "var(--cc-panel-border)",
+          color: "var(--cc-text)",
+        }}
+      >
+        Season 2 · 군상 시작하기
+      </button>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      <p
+        className="font-mono text-sm"
+        style={{ color: "var(--cc-text-muted)" }}
+      >
+        당신의 세계에 이름을 붙여주세요.
+      </p>
+      <input
+        type="text"
+        value={worldNameInput}
+        onChange={(e) => setWorldNameInput(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && handleStartSeason2()}
+        placeholder="세계의 이름..."
+        className="rounded-md border bg-transparent px-3 py-2.5 font-mono text-sm outline-none"
+        style={{
+          borderColor: "var(--cc-accent)",
+          color: "var(--cc-text)",
+        }}
+        autoFocus
+      />
+      <button
+        type="button"
+        onClick={handleStartSeason2}
+        disabled={!worldNameInput.trim()}
+        className="cc-choice-btn rounded-md border px-4 py-2.5 font-mono text-sm disabled:opacity-40"
+        style={{ borderColor: "var(--cc-accent)", color: "var(--cc-accent)" }}
+      >
+        군상 시작하기 →
+      </button>
+    </div>
+  );
+}
+
 export function SeasonBridge() {
+  const currentStep = useStoryStore((s) => s.currentStep);
   const blocks = useStoryStore((s) => s.storyState.blocks);
   const synopsis = useStoryStore((s) => s.synopsis);
   const synopsisViewActive = useStoryStore((s) => s.synopsisViewActive);
@@ -49,6 +117,14 @@ export function SeasonBridge() {
       setGenError("클립보드 복사에 실패했습니다.");
     }
   };
+
+  if (currentStep === SEASON2_BRIDGE_STEP) {
+    return <Season2Bridge />;
+  }
+
+  if (currentStep !== BRIDGE_STEP) {
+    return null;
+  }
 
   if (isGeneratingSynopsis && !synopsis) {
     return (
@@ -134,17 +210,7 @@ export function SeasonBridge() {
             <RefreshCw className="h-4 w-4" />
             다시 만들기
           </button>
-          <button
-            type="button"
-            disabled
-            className="rounded-md border px-3 py-2.5 font-mono text-sm opacity-45"
-            style={{
-              borderColor: "var(--cc-panel-border)",
-              color: "var(--cc-text-muted)",
-            }}
-          >
-            Season 2 준비중
-          </button>
+          <Season2StartButton />
         </div>
       </div>
     );
@@ -192,17 +258,7 @@ export function SeasonBridge() {
           {isGeneratingSynopsis ? "시놉시스 생성 중..." : "1페이지 시놉시스 보기"}
         </button>
 
-        <button
-          type="button"
-          disabled
-          className="rounded-md border px-4 py-3 font-mono text-sm opacity-45"
-          style={{
-            borderColor: "var(--cc-panel-border)",
-            color: "var(--cc-text-muted)",
-          }}
-        >
-          Season 2 준비중
-        </button>
+        <Season2StartButton />
       </div>
     </div>
   );

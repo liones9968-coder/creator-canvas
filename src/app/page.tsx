@@ -2,8 +2,10 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
+import { DevQuickEntryButton } from "@/components/DevQuickEntryButton";
 import { ThemedMainShell } from "@/components/ThemedMainShell";
 import { useAppStore } from "@/store/useAppStore";
+import { useStoryStore } from "@/store/useStoryStore";
 
 const INTRO_PROMPT =
   "C:\\> 지금 새로운 세계를 만들어 보시겠습니까? (Y/N)";
@@ -52,7 +54,7 @@ function IntroView() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex min-h-screen min-h-dvh w-full flex-col items-center justify-center gap-8 bg-black px-6 py-10"
+      className="relative flex min-h-screen min-h-dvh w-full flex-col items-center justify-center gap-8 bg-black px-6 py-10"
     >
       <div className="flex w-full max-w-xl flex-col items-center gap-6 text-center">
         <p className="font-mono text-lg leading-relaxed text-green-500 sm:text-xl md:text-2xl">
@@ -94,16 +96,34 @@ function IntroView() {
           세계 만들기 시작
         </span>
       </div>
+
     </motion.div>
   );
 }
 
 export default function Home() {
   const phase = useAppStore((s) => s.phase);
+  const currentStep = useStoryStore((s) => s.currentStep);
+  const enterMain = useAppStore((s) => s.enterMain);
+
+  const showDevQuickEntry =
+    process.env.NODE_ENV === "development" &&
+    (phase === "intro" || (phase === "main" && currentStep === 1));
 
   return (
-    <AnimatePresence mode="wait">
-      {phase === "intro" ? <IntroView /> : <ThemedMainShell />}
-    </AnimatePresence>
+    <>
+      <AnimatePresence mode="wait">
+        {phase === "intro" ? <IntroView /> : <ThemedMainShell />}
+      </AnimatePresence>
+      {showDevQuickEntry && (
+        <DevQuickEntryButton
+          onAfterSeed={() => {
+            if (useAppStore.getState().phase === "intro") {
+              enterMain();
+            }
+          }}
+        />
+      )}
+    </>
   );
 }

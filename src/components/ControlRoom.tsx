@@ -3,6 +3,7 @@
 import { Activity } from "lucide-react";
 import { useState } from "react";
 import { SeasonBridge } from "@/components/SeasonBridge";
+import { UndoChoiceButton } from "@/components/UndoChoiceButton";
 import { QuestionPanel } from "@/components/QuestionPanel";
 import { WorldGenerationTerminal } from "@/components/WorldGenerationTerminal";
 import { useAiQuestion } from "@/hooks/useAiQuestion";
@@ -215,6 +216,7 @@ export function ControlRoom() {
                 등록하고 다음으로
               </button>
             </div>
+            <UndoChoiceButton />
           </div>
         ) : null}
       </QuestionPanel>

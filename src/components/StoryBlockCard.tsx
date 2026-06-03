@@ -5,19 +5,41 @@ import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import type { StoryBlock } from "@/store/useStoryStore";
 
+const SEASON2_LABELS: Record<string, string> = {
+  primary_ally: "첫 번째 조연",
+  ally_desire: "조연의 욕망",
+  emotional_bond: "관계의 결속",
+  central_opponent: "중심 적대자",
+  opponent_belief: "적대자의 명분",
+  first_faction: "첫 번째 세력",
+  faction_secret: "세력의 비밀",
+  counter_faction: "대립 세력",
+  relationship_triangle: "관계의 삼각형",
+  beloved_character: "독자가 사랑할 인물",
+  betrayal_or_sacrifice: "배신 또는 희생",
+  relationship_crack: "관계의 균열",
+};
+
 function cardTypeLabel(cardType: string): string {
   if (cardType === "universe") return "Universe";
+  if (cardType in SEASON2_LABELS) return SEASON2_LABELS[cardType];
   return cardType.replace(/_/g, " ");
 }
 
 type Props = {
   block: StoryBlock;
   forceDetail?: boolean;
+  isCollapsedByDefault?: boolean;
 };
 
-export function StoryBlockCard({ block, forceDetail = false }: Props) {
+export function StoryBlockCard({
+  block,
+  forceDetail = false,
+  isCollapsedByDefault = false,
+}: Props) {
   const [expanded, setExpanded] = useState(false);
   const showDetail = forceDetail || expanded;
+  const isSeason2 = block.season === 2;
 
   return (
     <motion.article
@@ -28,7 +50,7 @@ export function StoryBlockCard({ block, forceDetail = false }: Props) {
       className="cc-story-card w-full shrink-0 rounded-lg border transition-shadow"
       style={{
         background: "var(--cc-card-bg)",
-        borderColor: "var(--cc-card-border)",
+        borderColor: isSeason2 ? "var(--cc-accent)" : "var(--cc-card-border)",
         boxShadow: showDetail ? `0 0 16px var(--cc-accent-glow)` : undefined,
       }}
     >
@@ -44,7 +66,18 @@ export function StoryBlockCard({ block, forceDetail = false }: Props) {
               className="font-mono text-[10px] uppercase tracking-wider"
               style={{ color: "var(--cc-accent-secondary)" }}
             >
-              {cardTypeLabel(block.cardType)} · S{block.step}
+              {cardTypeLabel(block.cardType)}
+              {" · "}
+              <span
+                style={{
+                  color: isSeason2
+                    ? "var(--cc-accent)"
+                    : "var(--cc-accent-secondary)",
+                  fontWeight: isSeason2 ? 700 : undefined,
+                }}
+              >
+                S{block.season ?? 1}
+              </span>
             </span>
             {!forceDetail && (
               <ChevronDown
@@ -66,7 +99,9 @@ export function StoryBlockCard({ block, forceDetail = false }: Props) {
             className="mt-1 font-mono text-xs leading-relaxed"
             style={{ color: "var(--cc-text)" }}
           >
-            {block.summary}
+            {!showDetail && isCollapsedByDefault
+              ? `${block.rawAnswer.slice(0, 30)}${block.rawAnswer.length > 30 ? "..." : ""}`
+              : block.summary}
           </p>
         </div>
       </button>

@@ -6,9 +6,11 @@ import { useStoryStore } from "@/store/useStoryStore";
 import { useUiEvolution } from "@/hooks/useUiEvolution";
 import { ControlRoom } from "./ControlRoom";
 import { CreationCanvas } from "./CreationCanvas";
+import { Season2Layout } from "./Season2Layout";
 
 export function ThemedMainShell() {
   const genre = useStoryStore((s) => s.storyState.universe?.genre);
+  const currentSeason = useStoryStore((s) => s.storyState.currentSeason);
   const theme = getThemeForGenre(genre);
   const { stage: evolutionStage } = useUiEvolution();
 
@@ -22,8 +24,14 @@ export function ThemedMainShell() {
       style={themeToCssVars(theme)}
       data-ui-evolution={evolutionStage}
     >
-      <ControlRoom />
-      <CreationCanvas />
+      {currentSeason === 2 ? (
+        <Season2Layout />
+      ) : (
+        <>
+          <ControlRoom />
+          <CreationCanvas />
+        </>
+      )}
     </motion.div>
   );
 }
