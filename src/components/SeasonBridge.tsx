@@ -34,7 +34,7 @@ function Season2StartButton() {
           color: "var(--cc-text)",
         }}
       >
-        Season 2 · 군상 시작하기
+        Season 2 · 성좌 시작하기
       </button>
     );
   }
@@ -67,7 +67,7 @@ function Season2StartButton() {
         className="cc-choice-btn rounded-md border px-4 py-2.5 font-mono text-sm disabled:opacity-40"
         style={{ borderColor: "var(--cc-accent)", color: "var(--cc-accent)" }}
       >
-        군상 시작하기 →
+        성좌 시작하기 →
       </button>
     </div>
   );

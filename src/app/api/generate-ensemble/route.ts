@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import { generateTextWithFallback } from "@/lib/geminiText";
 import type { StoryState } from "@/store/useStoryStore";
 
-const ENSEMBLE_SYSTEM_PROMPT = `너는 Creator Canvas의 군상 설계 편집자다.
+const ENSEMBLE_SYSTEM_PROMPT = `너는 Creator Canvas의 성좌 설계 편집자다.
 
 사용자가 Season 1에서 만든 세계관·주인공 설정과 Season 2에서 선택한 인물·세력·관계 블록을 바탕으로
-군상 개요서를 작성하라.
+성좌 개요서를 작성하라.
 
 목표:
 - 단순 캐릭터 프로필이 아니라, 인물 간 욕망과 충돌이 살아 있는 관계망을 만든다.
@@ -21,7 +21,7 @@ const ENSEMBLE_SYSTEM_PROMPT = `너는 Creator Canvas의 군상 설계 편집자
 
 반드시 아래 섹션 제목을 ## 마크다운 형식으로 포함하고, 각 섹션을 충실히 채워라:
 
-## 군상 개요
+## 성좌 개요
 ## 주요 인물 목록
 ## 주인공과 핵심 조연의 관계
 ## 중심 적대자와 그의 명분
@@ -32,7 +32,7 @@ const ENSEMBLE_SYSTEM_PROMPT = `너는 Creator Canvas의 군상 설계 편집자
 ## 배신 또는 희생 후보
 ## Season 3로 이어질 관계의 균열
 
-인사말·메타 설명 없이 군상 개요서 본문만 출력하라.`;
+인사말·메타 설명 없이 성좌 개요서 본문만 출력하라.`;
 
 type RequestBody = {
   storyState: StoryState;
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
   const { storyState } = body;
   if (!storyState?.blocks?.length) {
     return NextResponse.json(
-      { error: "군상 개요서를 만들 카드 데이터가 없습니다." },
+      { error: "성좌 개요서를 만들 카드 데이터가 없습니다." },
       { status: 400 },
     );
   }
@@ -76,7 +76,7 @@ export async function POST(request: Request) {
       })),
   };
 
-  const userPrompt = `아래 JSON은 Season 1·2에서 누적된 서사 데이터다. 이를 하나의 군상 개요서로 엮어라.\n\n${JSON.stringify(payloadForModel, null, 2)}`;
+  const userPrompt = `아래 JSON은 Season 1·2에서 누적된 서사 데이터다. 이를 하나의 성좌 개요서로 엮어라.\n\n${JSON.stringify(payloadForModel, null, 2)}`;
 
   try {
     const { text, modelUsed } = await generateTextWithFallback({

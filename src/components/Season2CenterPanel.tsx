@@ -56,7 +56,7 @@ export function Season2CenterPanel({
   if (currentStep === SEASON2_BRIDGE_STEP) {
     return (
       <main
-        className="flex min-w-0 flex-1 flex-col items-center justify-center gap-4 overflow-y-auto border-x px-6 py-8"
+        className="flex min-h-0 w-full flex-1 flex-col items-center justify-center gap-4 overflow-y-auto border-x px-4 py-6 sm:px-6 sm:py-8 md:w-[50%]"
         style={{
           borderColor: "var(--cc-panel-border)",
           background: "var(--cc-canvas-bg)",
@@ -66,7 +66,7 @@ export function Season2CenterPanel({
           className="font-mono text-xl font-semibold"
           style={{ color: "var(--cc-accent)" }}
         >
-          Season 2 · 군상 완료
+          Season 2 · 성좌 완료
         </h3>
         <p
           className="max-w-md text-center font-mono text-sm"
@@ -86,7 +86,7 @@ export function Season2CenterPanel({
           }}
         >
           <BookOpen className="h-4 w-4" />
-          {isGeneratingEnsemble ? "군상 개요서 생성 중..." : "군상 개요서 보기"}
+          {isGeneratingEnsemble ? "성좌 개요서 생성 중..." : "성좌 개요서 보기"}
         </button>
         <button
           type="button"
@@ -105,7 +105,7 @@ export function Season2CenterPanel({
 
   return (
       <main
-        className="flex min-w-0 flex-1 flex-col overflow-y-auto border-x px-5 py-5"
+        className="flex min-h-0 w-full flex-1 flex-col overflow-y-auto border-x px-4 py-4 sm:px-5 sm:py-5 md:w-[50%]"
       style={{
         borderColor: "var(--cc-panel-border)",
         background: "var(--cc-canvas-bg)",
@@ -143,7 +143,7 @@ export function Season2CenterPanel({
                 <button
                   type="button"
                   onClick={() => handleAiChoice(choice)}
-                  className="cc-choice-btn group w-full rounded-md border px-3 py-2.5 text-left font-mono text-sm transition-all"
+                    className="cc-choice-btn cc-choice-label group w-full rounded-md border px-3 py-2.5 text-left font-mono text-sm transition-all"
                   style={{
                     borderColor: "var(--cc-panel-border)",
                     background: "var(--cc-card-bg)",

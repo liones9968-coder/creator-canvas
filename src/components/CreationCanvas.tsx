@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { LayoutList, Sparkles } from "lucide-react";
+import { LayoutList, Sparkles, X } from "lucide-react";
 import { useState } from "react";
 import { CanvasPendingCard } from "@/components/CanvasPendingCard";
 import { GenreAmbientEffects } from "@/components/GenreAmbientEffects";
@@ -13,7 +13,15 @@ import type { GenreKey } from "@/lib/genreThemes";
 import { UI_EVOLUTION_LABELS } from "@/lib/uiEvolution";
 import { useStoryStore } from "@/store/useStoryStore";
 
-export function CreationCanvas() {
+type Props = {
+  mobileOpen?: boolean;
+  onCloseMobile?: () => void;
+};
+
+export function CreationCanvas({
+  mobileOpen = false,
+  onCloseMobile,
+}: Props) {
   const blocks = useStoryStore((s) => s.storyState.blocks);
   const currentStep = useStoryStore((s) => s.currentStep);
   const isLoadingQuestion = useStoryStore((s) => s.isLoadingQuestion);
@@ -31,29 +39,36 @@ export function CreationCanvas() {
 
   return (
     <section
-      className="cc-creation-canvas relative flex w-[60%] min-w-0 flex-col"
+      className={`cc-creation-canvas relative flex min-h-0 flex-col md:w-[60%] md:flex-none ${
+        mobileOpen
+          ? "fixed inset-0 z-40 flex w-full pb-20"
+          : "hidden md:flex"
+      }`}
       style={{
         background: "var(--cc-canvas-bg)",
         color: "var(--cc-text)",
       }}
     >
       <header
-        className="relative z-10 flex items-center justify-between gap-3 border-b px-5 py-4"
+        className="relative z-10 flex shrink-0 items-center justify-between gap-2 border-b px-4 py-3 sm:gap-3 sm:px-5 sm:py-4"
         style={{ borderColor: "var(--cc-canvas-border)" }}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 items-center gap-2">
           <Sparkles
-            className="h-4 w-4"
+            className="h-4 w-4 shrink-0"
             style={{ color: "var(--cc-accent-secondary)" }}
           />
-          <h2 className="font-mono text-sm font-semibold tracking-wide">
-            창조의 캔버스 · 데이터 시각화
-            {seasonComplete ? " · Season 1 완료" : ""}
+          <h2 className="truncate font-mono text-xs font-semibold tracking-wide sm:text-sm">
+            <span className="md:hidden">캔버스</span>
+            <span className="hidden md:inline">
+              창조의 캔버스 · 데이터 시각화
+              {seasonComplete ? " · S1 완료" : ""}
+            </span>
           </h2>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <span
-            className="hidden font-mono text-[9px] uppercase tracking-wider opacity-50 sm:inline"
+            className="hidden font-mono text-[9px] uppercase tracking-wider opacity-50 lg:inline"
             style={{ color: "var(--cc-accent)" }}
           >
             {UI_EVOLUTION_LABELS[evolutionStage]}
@@ -61,15 +76,31 @@ export function CreationCanvas() {
           <button
             type="button"
             onClick={() => setDetailMode((v) => !v)}
-            className="cc-choice-btn flex items-center gap-1.5 rounded border px-2.5 py-1 font-mono text-[10px] uppercase tracking-wide"
+            className="cc-choice-btn flex items-center gap-1.5 rounded border px-2 py-1 font-mono text-[10px] uppercase tracking-wide"
             style={{
               borderColor: "var(--cc-panel-border)",
               color: "var(--cc-accent)",
             }}
           >
             <LayoutList className="h-3 w-3" />
-            {detailMode ? "요약 보기" : "상세 보기"}
+            <span className="max-md:sr-only md:not-sr-only">
+              {detailMode ? "요약 보기" : "상세 보기"}
+            </span>
           </button>
+          {mobileOpen && onCloseMobile && (
+            <button
+              type="button"
+              onClick={onCloseMobile}
+              className="cc-choice-btn rounded border p-1.5 md:hidden"
+              style={{
+                borderColor: "var(--cc-panel-border)",
+                color: "var(--cc-text-muted)",
+              }}
+              aria-label="캔버스 닫기"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </div>
       </header>
 

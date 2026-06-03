@@ -42,6 +42,6 @@ export async function runEnsembleGeneration(): Promise<string | null> {
     setGeneratingEnsemble(false);
     return err instanceof Error
       ? err.message
-      : "군상 개요서 생성에 실패했습니다. 다시 시도해주세요.";
+      : "성좌 개요서 생성에 실패했습니다. 다시 시도해주세요.";
   }
 }

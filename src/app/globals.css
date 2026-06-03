@@ -64,6 +64,32 @@ body {
   outline-offset: 3px;
 }
 
+.cc-intro-decline-btn {
+  border: 1px solid rgba(34, 197, 94, 0.28);
+  background: #000;
+  border-radius: 2px;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.cc-intro-decline-btn:hover {
+  border-color: rgba(34, 197, 94, 0.45);
+  color: #86efac;
+}
+
+.cc-intro-decline-btn:active {
+  transform: scale(0.98);
+}
+
+.cc-intro-decline-btn:focus-visible {
+  outline: 2px solid #22c55e;
+  outline-offset: 3px;
+}
+
 .cc-choice-btn:hover:not(:disabled) {
   border-color: var(--cc-btn-hover-border) !important;
   box-shadow: var(--cc-btn-hover-shadow);
@@ -72,6 +98,23 @@ body {
 .cc-choice-btn:focus-visible {
   outline: 2px solid var(--cc-accent);
   outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .cc-choice-btn,
+  .cc-choice-btn .cc-choice-label,
+  .cc-choice-label {
+    word-break: keep-all;
+    white-space: normal;
+  }
+
+  .cc-s1-shell .cc-control-room {
+    border-right: none;
+  }
+
+  body:has(.cc-creation-canvas.fixed) {
+    overflow: hidden;
+  }
 }
 
 .cc-themed {

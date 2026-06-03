@@ -96,13 +96,6 @@ function IntroView() {
           </span>
         </p>
 
-        <p
-          className="font-mono text-[10px] leading-snug text-green-800/75 sm:text-xs"
-          style={{ textAlign: "left" }}
-        >
-          [ Y ] 키 또는 아래 「세계 부팅」 · [ N ] 키 또는 「현실에 머무르기」
-        </p>
-
         {declined && (
           <motion.p
             initial={{ opacity: 0 }}

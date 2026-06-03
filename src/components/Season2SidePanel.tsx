@@ -16,7 +16,7 @@ import { useStoryStore } from "@/store/useStoryStore";
 export type SidePanelMode = "synopsis" | "ensemble" | "node";
 
 const SIDE_PANEL_CLASS =
-  "flex w-[280px] shrink-0 flex-col border-l overflow-y-auto";
+  "flex w-full shrink-0 flex-col border-t overflow-y-auto md:w-[280px] md:border-t-0 md:border-l";
 
 type Props = {
   mode: SidePanelMode;
@@ -165,7 +165,7 @@ export function Season2SidePanel({
             className="font-mono text-sm font-semibold"
             style={{ color: "var(--cc-accent)" }}
           >
-            군상 개요서 합성 중
+            성좌 개요서 합성 중
           </h3>
           <p
             className="mt-2 font-mono text-xs"
@@ -200,7 +200,7 @@ export function Season2SidePanel({
               className="font-mono text-sm font-semibold"
               style={{ color: "var(--cc-accent)" }}
             >
-              군상 개요서
+              성좌 개요서
             </h3>
             <p
               className="mt-0.5 font-mono text-[10px]"
@@ -263,7 +263,7 @@ export function Season2SidePanel({
           className="font-mono text-xs"
           style={{ color: "var(--cc-text-muted)" }}
         >
-          군상 개요서를 생성합니다.
+          성좌 개요서를 생성합니다.
         </p>
         {ensembleError && (
           <p className="mt-2 font-mono text-xs text-red-400">{ensembleError}</p>
@@ -279,7 +279,7 @@ export function Season2SidePanel({
           }}
         >
           <BookOpen className="h-3.5 w-3.5" />
-          {isGeneratingEnsemble ? "생성 중..." : "군상 개요서 생성"}
+          {isGeneratingEnsemble ? "생성 중..." : "성좌 개요서 생성"}
         </button>
       </aside>
     );

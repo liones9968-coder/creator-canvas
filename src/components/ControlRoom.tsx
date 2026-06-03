@@ -25,7 +25,11 @@ const UNIVERSE_OPTIONS: UniverseSelection[] = [
   { title: "차원의 틈새", genre: "하이브리드" },
 ];
 
-export function ControlRoom() {
+type Props = {
+  className?: string;
+};
+
+export function ControlRoom({ className = "" }: Props) {
   const currentStep = useStoryStore((s) => s.currentStep);
   const setUniverse = useStoryStore((s) => s.setUniverse);
   const submitChoice = useStoryStore((s) => s.submitChoice);
@@ -65,7 +69,7 @@ export function ControlRoom() {
 
   return (
     <aside
-      className="cc-control-room flex w-[40%] min-w-0 flex-col border-r"
+      className={`cc-control-room flex w-full min-w-0 flex-col border-r md:w-[40%] md:flex-none ${className}`}
       style={{
         background: "var(--cc-panel-bg)",
         borderColor: "var(--cc-panel-border)",
@@ -73,28 +77,34 @@ export function ControlRoom() {
       }}
     >
       <header
-        className="flex items-center justify-between border-b px-5 py-4"
+        className="flex shrink-0 flex-col gap-1 border-b px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-5 sm:py-4"
         style={{ borderColor: "var(--cc-panel-border)" }}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 items-center gap-2">
           <Activity
-            className="h-4 w-4"
+            className="h-4 w-4 shrink-0"
             style={{ color: "var(--cc-accent)" }}
           />
-          <h2 className="font-mono text-sm font-semibold tracking-wide">
-            통제실 · 질문 컨트롤러
+          <h2 className="truncate font-mono text-xs font-semibold tracking-wide sm:text-sm">
+            <span className="md:hidden">통제실</span>
+            <span className="hidden md:inline">통제실 · 질문 컨트롤러</span>
           </h2>
         </div>
-        <div className="flex flex-col items-end gap-0.5">
+        <div className="flex min-w-0 items-center justify-between gap-2 sm:flex-col sm:items-end sm:gap-0.5">
           <span
-            className="font-mono text-xs"
+            className="truncate font-mono text-[11px] sm:text-xs"
             style={{ color: "var(--cc-text-muted)" }}
           >
             STEP {currentStep}
-            {stepLabel ? ` · ${stepLabel}` : ""}
+            {stepLabel ? (
+              <>
+                <span className="hidden sm:inline"> · </span>
+                <span className="block sm:inline">{stepLabel}</span>
+              </>
+            ) : null}
           </span>
           <span
-            className="cc-evolution-badge font-mono text-[9px] uppercase tracking-wider opacity-50"
+            className="cc-evolution-badge hidden font-mono text-[9px] uppercase tracking-wider opacity-50 md:inline"
             style={{ color: "var(--cc-accent)" }}
           >
             {UI_EVOLUTION_LABELS[evolutionStage]}
@@ -118,13 +128,13 @@ export function ControlRoom() {
                   <button
                     type="button"
                     onClick={() => setUniverse(option)}
-                    className="cc-choice-btn group w-full rounded-md border px-3 py-2.5 text-left transition-all duration-200"
+                    className="cc-choice-btn cc-choice-label group w-full rounded-md border px-3 py-2.5 text-left transition-all duration-200"
                     style={{
                       borderColor: "var(--cc-panel-border)",
                       background: "var(--cc-card-bg)",
                     }}
                   >
-                    <span className="block font-mono text-sm transition-colors group-hover:text-[var(--cc-accent)]">
+                    <span className="cc-choice-label block font-mono text-sm transition-colors group-hover:text-[var(--cc-accent)]">
                       {option.title}
                     </span>
                     <span
@@ -169,7 +179,7 @@ export function ControlRoom() {
                   <button
                     type="button"
                     onClick={() => handleAiChoice(choice)}
-                    className="cc-choice-btn group w-full rounded-md border px-3 py-2.5 text-left font-mono text-sm transition-all"
+                    className="cc-choice-btn cc-choice-label group w-full rounded-md border px-3 py-2.5 text-left font-mono text-sm transition-all"
                     style={{
                       borderColor: "var(--cc-panel-border)",
                       background: "var(--cc-card-bg)",

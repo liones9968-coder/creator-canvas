@@ -49,7 +49,7 @@ export function Season2Bridge() {
       setEnsembleError(
         err instanceof Error
           ? err.message
-          : "군상 개요서 생성에 실패했습니다. 다시 시도해주세요.",
+          : "성좌 개요서 생성에 실패했습니다. 다시 시도해주세요.",
       );
     }
   };
@@ -67,7 +67,7 @@ export function Season2Bridge() {
       setEnsembleError(
         err instanceof Error
           ? err.message
-          : "군상 개요서 생성에 실패했습니다. 다시 시도해주세요.",
+          : "성좌 개요서 생성에 실패했습니다. 다시 시도해주세요.",
       );
     }
   };
@@ -90,7 +90,7 @@ export function Season2Bridge() {
           className="font-mono text-lg font-semibold"
           style={{ color: "var(--cc-accent)" }}
         >
-          군상 개요서 합성 중
+          성좌 개요서 합성 중
         </h3>
         <p
           className="font-mono text-sm leading-relaxed"
@@ -119,13 +119,13 @@ export function Season2Bridge() {
             className="font-mono text-lg font-semibold"
             style={{ color: "var(--cc-accent)" }}
           >
-            군상 개요서
+            성좌 개요서
           </h3>
           <p
             className="mt-1 font-mono text-[11px]"
             style={{ color: "var(--cc-text-muted)" }}
           >
-            {ensemble.content.length.toLocaleString()}자 · Season 2 군상
+            {ensemble.content.length.toLocaleString()}자 · Season 2 성좌
           </p>
         </div>
 
@@ -195,7 +195,7 @@ export function Season2Bridge() {
           className="font-mono text-xl font-semibold"
           style={{ color: "var(--cc-accent)" }}
         >
-          Season 2 · 군상 완료
+          Season 2 · 성좌 완료
         </h3>
         <p
           className="font-mono text-sm leading-relaxed"
@@ -203,7 +203,7 @@ export function Season2Bridge() {
         >
           인물과 세력이 관계망을 이루었습니다.
           <br />
-          군상 개요서로 엮어 보세요.
+          성좌 개요서로 엮어 보세요.
         </p>
       </div>
 
@@ -224,7 +224,7 @@ export function Season2Bridge() {
           }}
         >
           <BookOpen className="h-4 w-4" />
-          {isGeneratingEnsemble ? "군상 개요서 생성 중..." : "군상 개요서 보기"}
+          {isGeneratingEnsemble ? "성좌 개요서 생성 중..." : "성좌 개요서 보기"}
         </button>
         <button
           type="button"

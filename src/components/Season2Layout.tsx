@@ -126,7 +126,7 @@ function CharacterColumn({
   onSelectNode: (node: RelationNode) => void;
 }) {
   return (
-    <div className="flex w-[15%] min-w-0 flex-col justify-center gap-4 overflow-hidden px-3 py-4">
+    <div className="flex w-full shrink-0 flex-row gap-2 overflow-x-auto px-3 py-3 md:w-[15%] md:flex-col md:justify-center md:gap-4 md:overflow-hidden md:py-4">
       {slots.map((slot) => (
         <CharacterSlot
           key={slot.id ?? slot.emptyLabel}
@@ -166,7 +166,7 @@ export function Season2Layout() {
   const stage = getStageForStep(currentStep);
   const stepLabel = isBridgeStep(currentStep)
     ? currentStep === SEASON2_BRIDGE_STEP
-      ? "군상 완료"
+      ? "성좌 완료"
       : "창세 완료"
     : (stage?.label ?? "");
 
@@ -198,14 +198,14 @@ export function Season2Layout() {
       }}
     >
       <header
-        className="flex shrink-0 items-center justify-between border-b px-5 py-3"
+        className="flex shrink-0 flex-col gap-1 border-b px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5"
         style={{ borderColor: "var(--cc-panel-border)" }}
       >
-        <h2 className="font-mono text-sm font-semibold tracking-wide">
-          {worldName ?? "Season 2"} · 군상
+        <h2 className="truncate font-mono text-xs font-semibold tracking-wide sm:text-sm">
+          {worldName ?? "Season 2"} · 성좌
         </h2>
         <span
-          className="font-mono text-xs"
+          className="truncate font-mono text-[11px] sm:text-xs"
           style={{ color: "var(--cc-text-muted)" }}
         >
           STEP {currentStep}
@@ -213,7 +213,7 @@ export function Season2Layout() {
         </span>
       </header>
 
-      <div className="flex min-h-0 flex-1 overflow-hidden">
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto md:flex-row md:overflow-hidden">
         <CharacterColumn
           slots={LEFT_SLOTS}
           nodeMap={nodeMap}
