@@ -74,6 +74,6 @@ export function buildFallbackSynopsis(state: StoryState): string {
     section("1막 / 2막 / 3막 흐름", `${act1}\n\n${act2}\n\n${act3}`),
     section("엔딩의 여운", ending),
     section("창작 카드에서 이어받은 설정", appendix),
-    "\n---\n*API 연결 없이 로컬에서 엮은 Season 1 요약 시놉시스입니다. 네트워크 복구 후 「다시 만들기」로 AI 버전을 받을 수 있습니다.*\n",
+    "\n---\n*API 연결 없이 로컬에서 엮은 Season 1 요약 창세록입니다. 네트워크 복구 후 「다시 만들기」로 AI 버전을 받을 수 있습니다.*\n",
   ].join("\n");
 }

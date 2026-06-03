@@ -38,7 +38,7 @@ function sidePanelCollapsedLabel(
     return `${roleLabel(selectedNode.id)} · ${nodePanelTitle(selectedNode)}`;
   }
   if (mode === "ensemble") return "성좌 개요서";
-  return "Season 1 · 시놉시스";
+  return "Season 1 · 창세록";
 }
 
 function PanelShell({
@@ -383,7 +383,7 @@ export function Season2SidePanel({
           className="font-mono text-[10px] tracking-wider uppercase"
           style={{ color: "var(--cc-text-muted)" }}
         >
-          Season 1 · 시놉시스
+          Season 1 · 창세록
         </p>
       </div>
       <div className="p-3">
@@ -397,7 +397,7 @@ export function Season2SidePanel({
             className="font-mono text-xs leading-relaxed"
             style={{ color: "var(--cc-text-muted)" }}
           >
-            시놉시스가 없습니다. Season 1 완료 후 시놉시스를 생성해주세요.
+            창세록이 없습니다. Season 1 완료 후 창세록을 열람하세요.
           </p>
         )}
       </div>

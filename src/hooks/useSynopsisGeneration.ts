@@ -30,7 +30,7 @@ export function useSynopsisGeneration() {
       const data = (await res.json()) as SynopsisResponse & { error?: string };
 
       if (!res.ok && !data.synopsis) {
-        throw new Error(data.error ?? "시놉시스 생성에 실패했습니다.");
+        throw new Error(data.error ?? "창세록 해독에 실패했습니다.");
       }
 
       setSynopsisResult(data.synopsis, data.isFallback ?? false);

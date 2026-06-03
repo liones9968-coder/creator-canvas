@@ -3,7 +3,7 @@ import { generateTextWithFallback } from "@/lib/geminiText";
 import { buildFallbackSynopsis } from "@/lib/synopsisFallback";
 import type { StoryState } from "@/store/useStoryStore";
 
-const SYNOPSIS_SYSTEM_PROMPT = `너는 Creator Canvas의 시놉시스 편집자다.
+const SYNOPSIS_SYSTEM_PROMPT = `너는 SEME 세계 해독 엔진이다. 창조자의 선택으로 만들어진 이 세계에 태초부터 새겨져 있던 기록을 발굴하고 해독하여 창세록으로 정리한다. 작가가 쓰는 것이 아니라, 세계 자체에 이미 존재했던 최초의 기록을 읽어내는 것이다.
 
 사용자가 Season 1에서 선택한 서사 카드들(choices, blocks)을 바탕으로,
 작품 소개서에 가까운 긴 호흡의 시놉시스를 작성하라.
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
   const { storyState } = body;
   if (!storyState?.blocks?.length) {
     return NextResponse.json(
-      { error: "시놉시스를 만들 카드 데이터가 없습니다." },
+      { error: "창세록을 해독할 카드 데이터가 없습니다." },
       { status: 400 },
     );
   }

@@ -7,7 +7,7 @@ const MESSAGES = [
   "선택한 세계를 하나의 서사로 엮는 중...",
   "story blocks collected...",
   "weaving narrative structure...",
-  "generating synopsis...",
+  "창세록 해독 중...",
 ];
 
 export function SynopsisWeavingOverlay() {

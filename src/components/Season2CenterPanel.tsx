@@ -226,7 +226,7 @@ export function Season2CenterPanel({
           className="mt-1 font-mono text-[10px]"
           style={{ color: "var(--cc-text-muted)" }}
         >
-          탭하면 시놉시스 확인
+          탭하면 창세록 확인
         </p>
       </div>
     </main>

@@ -21,7 +21,7 @@ function parseSynopsisSections(text: string): Section[] {
   const flush = () => {
     if (currentTitle || currentBody.length) {
       sections.push({
-        title: currentTitle || "시놉시스",
+        title: currentTitle || "창세록",
         body: currentBody.join("\n").trim(),
       });
     }
@@ -42,7 +42,7 @@ function parseSynopsisSections(text: string): Section[] {
   flush();
 
   if (sections.length <= 1 && !sections[0]?.title) {
-    return [{ title: "시놉시스", body: text.trim() }];
+    return [{ title: "창세록", body: text.trim() }];
   }
   return sections;
 }
@@ -61,7 +61,7 @@ export function SynopsisDocument({ content, isFallback }: Props) {
             background: "var(--cc-card-bg)",
           }}
         >
-          AI 연결 없이 로컬에서 엮은 시놉시스입니다. 「다시 만들기」로 AI 버전을
+          AI 연결 없이 로컬에서 엮은 창세록입니다. 「다시 만들기」로 AI 버전을
           시도할 수 있습니다.
         </p>
       )}

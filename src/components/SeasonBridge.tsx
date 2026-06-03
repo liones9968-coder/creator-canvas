@@ -133,7 +133,7 @@ export function SeasonBridge() {
           className="font-mono text-lg font-semibold"
           style={{ color: "var(--cc-accent)" }}
         >
-          시놉시스 합성 중
+          창세록 해독 중
         </h3>
         <p
           className="font-mono text-sm leading-relaxed"
@@ -164,7 +164,7 @@ export function SeasonBridge() {
             className="font-mono text-lg font-semibold"
             style={{ color: "var(--cc-accent)" }}
           >
-            1페이지 시놉시스
+            창세록
           </h3>
           <p
             className="mt-1 font-mono text-[11px]"
@@ -233,8 +233,8 @@ export function SeasonBridge() {
           className="font-mono text-sm leading-relaxed"
           style={{ color: "var(--cc-text-muted)" }}
         >
-          {blocks.length}개의 카드가 하나의 세계를 이루었습니다. 시놉시스로
-          엮어 보세요.
+          {blocks.length}개의 카드가 하나의 세계를 이루었습니다. 창세록을
+          열람해 보세요.
         </p>
       </div>
 
@@ -255,7 +255,7 @@ export function SeasonBridge() {
           }}
         >
           <BookOpen className="h-4 w-4" />
-          {isGeneratingSynopsis ? "시놉시스 생성 중..." : "1페이지 시놉시스 보기"}
+          {isGeneratingSynopsis ? "창세록 해독 중..." : "창세록 열람"}
         </button>
 
         <Season2StartButton />
