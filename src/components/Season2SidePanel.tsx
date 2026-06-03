@@ -1,6 +1,7 @@
 "use client";
 
 import { BookOpen, Copy, RefreshCw } from "lucide-react";
+import type { ReactNode } from "react";
 import { useState } from "react";
 import { EnsembleDocument } from "@/components/EnsembleDocument";
 import { SynopsisDocument } from "@/components/SynopsisDocument";
@@ -24,7 +25,85 @@ type Props = {
   currentStep: number;
   ensembleError?: string | null;
   onCloseNode?: () => void;
+  collapsible?: boolean;
+  expanded?: boolean;
+  onToggleExpanded?: () => void;
 };
+
+function sidePanelCollapsedLabel(
+  mode: SidePanelMode,
+  selectedNode: RelationNode | null,
+): string {
+  if (mode === "node" && selectedNode) {
+    return `${roleLabel(selectedNode.id)} · ${nodePanelTitle(selectedNode)}`;
+  }
+  if (mode === "ensemble") return "성좌 개요서";
+  return "Season 1 · 시놉시스";
+}
+
+function PanelShell({
+  collapsible,
+  expanded,
+  onToggleExpanded,
+  collapsedLabel,
+  children,
+  className = "",
+}: {
+  collapsible?: boolean;
+  expanded?: boolean;
+  onToggleExpanded?: () => void;
+  collapsedLabel: string;
+  children: ReactNode;
+  className?: string;
+}) {
+  const panelStyle = {
+    background: "var(--cc-panel-bg)",
+    borderColor: "var(--cc-panel-border)",
+  };
+
+  if (collapsible) {
+    return (
+      <section
+        className={`sticky bottom-0 z-10 w-full shrink-0 border-t ${className}`}
+        style={panelStyle}
+      >
+        <button
+          type="button"
+          onClick={onToggleExpanded}
+          className="flex w-full items-center justify-between gap-2 px-4 py-3 font-mono text-xs"
+          aria-expanded={expanded}
+        >
+          <span
+            className="truncate text-left"
+            style={{ color: "var(--cc-text)" }}
+          >
+            {collapsedLabel}
+          </span>
+          <span className="shrink-0" style={{ color: "var(--cc-text-muted)" }}>
+            {expanded ? "▲" : "▼"}
+          </span>
+        </button>
+        {expanded ? (
+          <div
+            className="max-h-[min(50vh,28rem)] overflow-y-auto border-t"
+            style={{ borderColor: "var(--cc-panel-border)" }}
+          >
+            {children}
+          </div>
+        ) : null}
+      </section>
+    );
+  }
+
+  return (
+    <aside
+      className={`${SIDE_PANEL_CLASS} ${className}`.trim()}
+      style={panelStyle}
+    >
+      {children}
+    </aside>
+  );
+}
 
 export function Season2SidePanel({
   mode,
@@ -32,6 +111,9 @@ export function Season2SidePanel({
   currentStep,
   ensembleError: layoutEnsembleError,
   onCloseNode,
+  collapsible,
+  expanded,
+  onToggleExpanded,
 }: Props) {
   const synopsis = useStoryStore((s) => s.synopsis);
   const synopsisIsFallback = useStoryStore((s) => s.synopsisIsFallback);
@@ -45,6 +127,20 @@ export function Season2SidePanel({
   );
   const ensembleError = layoutEnsembleError ?? localEnsembleError;
   const [copyDone, setCopyDone] = useState(false);
+
+  const collapsedLabel = sidePanelCollapsedLabel(mode, selectedNode);
+
+  const shell = (children: ReactNode, className?: string) => (
+    <PanelShell
+      collapsible={collapsible}
+      expanded={expanded}
+      onToggleExpanded={onToggleExpanded}
+      collapsedLabel={collapsedLabel}
+      className={className}
+    >
+      {children}
+    </PanelShell>
+  );
 
   const handleOpenEnsemble = async () => {
     setLocalEnsembleError(null);
@@ -71,54 +167,47 @@ export function Season2SidePanel({
   };
 
   if (mode === "node" && selectedNode) {
-    return (
-      <aside
-        className={SIDE_PANEL_CLASS}
-        style={{
-          background: "var(--cc-panel-bg)",
-          borderColor: "var(--cc-panel-border)",
-        }}
-      >
-        <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-4">
-          <button
-            type="button"
-            onClick={onCloseNode}
-            className="self-end font-mono text-xs"
-            style={{ color: "var(--cc-text-muted)" }}
-          >
-            ✕
-          </button>
-          <p
-            className="font-mono text-[9px] tracking-wider uppercase"
-            style={{ color: "var(--cc-text-muted)" }}
-          >
-            {roleLabel(selectedNode.id)}
-          </p>
-          <p
-            className="break-words font-mono text-sm font-semibold leading-snug whitespace-normal"
-            style={{ color: "var(--cc-accent)" }}
-          >
-            {nodePanelTitle(selectedNode)}
-          </p>
-          {selectedNode.subLabel && (
-            <div>
-              <p
-                className="mb-1 font-mono text-[9px] tracking-wider uppercase"
-                style={{ color: "var(--cc-text-muted)" }}
-              >
-                핵심 동기
-              </p>
-              <p
-                className="break-words font-mono text-xs leading-relaxed whitespace-pre-wrap"
-                style={{ color: "var(--cc-text)" }}
-              >
-                {selectedNode.subLabel}
-              </p>
-            </div>
-          )}
-          {selectedNode.rawAnswer &&
-            selectedNode.rawAnswer.trim() !==
-              nodePanelTitle(selectedNode).trim() && (
+    return shell(
+      <div className="flex flex-col gap-3 p-4">
+        <button
+          type="button"
+          onClick={onCloseNode}
+          className="self-end font-mono text-xs"
+          style={{ color: "var(--cc-text-muted)" }}
+        >
+          ✕
+        </button>
+        <p
+          className="font-mono text-[9px] tracking-wider uppercase"
+          style={{ color: "var(--cc-text-muted)" }}
+        >
+          {roleLabel(selectedNode.id)}
+        </p>
+        <p
+          className="break-words font-mono text-sm font-semibold leading-snug whitespace-normal"
+          style={{ color: "var(--cc-accent)" }}
+        >
+          {nodePanelTitle(selectedNode)}
+        </p>
+        {selectedNode.subLabel && (
+          <div>
+            <p
+              className="mb-1 font-mono text-[9px] tracking-wider uppercase"
+              style={{ color: "var(--cc-text-muted)" }}
+            >
+              핵심 동기
+            </p>
+            <p
+              className="break-words font-mono text-xs leading-relaxed whitespace-pre-wrap"
+              style={{ color: "var(--cc-text)" }}
+            >
+              {selectedNode.subLabel}
+            </p>
+          </div>
+        )}
+        {selectedNode.rawAnswer &&
+          selectedNode.rawAnswer.trim() !==
+            nodePanelTitle(selectedNode).trim() && (
             <div>
               <p
                 className="mb-1 font-mono text-[9px] tracking-wider uppercase"
@@ -134,33 +223,26 @@ export function Season2SidePanel({
               </p>
             </div>
           )}
-          {selectedNode.marker && (
-            <div
-              className="rounded border px-2 py-1.5"
-              style={{ borderColor: "#f87171" }}
-            >
-              <p className="font-mono text-[9px] text-red-400">
-                {selectedNode.marker === "betrayal"
-                  ? "⚠ 배신 후보"
-                  : "⚠ 희생 후보"}
-              </p>
-            </div>
-          )}
-        </div>
-      </aside>
+        {selectedNode.marker && (
+          <div
+            className="rounded border px-2 py-1.5"
+            style={{ borderColor: "#f87171" }}
+          >
+            <p className="font-mono text-[9px] text-red-400">
+              {selectedNode.marker === "betrayal"
+                ? "⚠ 배신 후보"
+                : "⚠ 희생 후보"}
+            </p>
+          </div>
+        )}
+      </div>,
     );
   }
 
   if (mode === "ensemble") {
     if (isGeneratingEnsemble && !ensemble) {
-      return (
-        <aside
-          className={`${SIDE_PANEL_CLASS} p-4`}
-          style={{
-            background: "var(--cc-panel-bg)",
-            borderColor: "var(--cc-panel-border)",
-          }}
-        >
+      return shell(
+        <div className="p-4">
           <h3
             className="font-mono text-sm font-semibold"
             style={{ color: "var(--cc-accent)" }}
@@ -182,20 +264,17 @@ export function Season2SidePanel({
               style={{ background: "var(--cc-accent)" }}
             />
           </div>
-        </aside>
+        </div>,
       );
     }
 
     if (ensembleViewActive && ensemble) {
-      return (
-        <aside
-          className={SIDE_PANEL_CLASS}
-          style={{
-            background: "var(--cc-panel-bg)",
-            borderColor: "var(--cc-panel-border)",
-          }}
-        >
-          <div className="shrink-0 border-b p-3" style={{ borderColor: "var(--cc-panel-border)" }}>
+      return shell(
+        <>
+          <div
+            className="shrink-0 border-b p-3"
+            style={{ borderColor: "var(--cc-panel-border)" }}
+          >
             <h3
               className="font-mono text-sm font-semibold"
               style={{ color: "var(--cc-accent)" }}
@@ -209,21 +288,29 @@ export function Season2SidePanel({
               {ensemble.content.length.toLocaleString()}자
             </p>
           </div>
-          <div className="min-h-0 flex-1 overflow-y-auto p-3">
+          <div className="p-3">
             <EnsembleDocument
               content={ensemble.content}
               isFallback={ensemble.isFallback}
             />
           </div>
           {ensembleError && (
-            <p className="px-3 font-mono text-xs text-red-400">{ensembleError}</p>
+            <p className="px-3 font-mono text-xs text-red-400">
+              {ensembleError}
+            </p>
           )}
-          <div className="flex shrink-0 flex-col gap-2 border-t p-3" style={{ borderColor: "var(--cc-panel-border)" }}>
+          <div
+            className="flex flex-col gap-2 border-t p-3"
+            style={{ borderColor: "var(--cc-panel-border)" }}
+          >
             <button
               type="button"
               onClick={() => void handleCopy()}
               className="cc-choice-btn rounded-md border px-2 py-1.5 font-mono text-xs"
-              style={{ borderColor: "var(--cc-accent)", color: "var(--cc-accent)" }}
+              style={{
+                borderColor: "var(--cc-accent)",
+                color: "var(--cc-accent)",
+              }}
             >
               <Copy className="mr-1 inline h-3 w-3" />
               {copyDone ? "복사됨" : "복사하기"}
@@ -233,7 +320,10 @@ export function Season2SidePanel({
               onClick={() => void handleRegenerateEnsemble()}
               disabled={isGeneratingEnsemble}
               className="cc-choice-btn rounded-md border px-2 py-1.5 font-mono text-xs disabled:opacity-50"
-              style={{ borderColor: "var(--cc-panel-border)", color: "var(--cc-text)" }}
+              style={{
+                borderColor: "var(--cc-panel-border)",
+                color: "var(--cc-text)",
+              }}
             >
               <RefreshCw className="mr-1 inline h-3 w-3" />
               다시 만들기
@@ -242,23 +332,21 @@ export function Season2SidePanel({
               type="button"
               disabled
               className="rounded-md border px-2 py-1.5 font-mono text-xs opacity-45"
-              style={{ borderColor: "var(--cc-panel-border)", color: "var(--cc-text-muted)" }}
+              style={{
+                borderColor: "var(--cc-panel-border)",
+                color: "var(--cc-text-muted)",
+              }}
             >
               Season 3 준비중
             </button>
           </div>
-        </aside>
+        </>,
+        collapsible ? "" : "min-h-0 flex-1",
       );
     }
 
-    return (
-      <aside
-        className={`${SIDE_PANEL_CLASS} p-4`}
-        style={{
-          background: "var(--cc-panel-bg)",
-          borderColor: "var(--cc-panel-border)",
-        }}
-      >
+    return shell(
+      <div className="p-4">
         <p
           className="font-mono text-xs"
           style={{ color: "var(--cc-text-muted)" }}
@@ -281,19 +369,16 @@ export function Season2SidePanel({
           <BookOpen className="h-3.5 w-3.5" />
           {isGeneratingEnsemble ? "생성 중..." : "성좌 개요서 생성"}
         </button>
-      </aside>
+      </div>,
     );
   }
 
-  return (
-    <aside
-      className={SIDE_PANEL_CLASS}
-      style={{
-        background: "var(--cc-panel-bg)",
-        borderColor: "var(--cc-panel-border)",
-      }}
-    >
-      <div className="border-b p-3" style={{ borderColor: "var(--cc-panel-border)" }}>
+  return shell(
+    <>
+      <div
+        className="border-b p-3"
+        style={{ borderColor: "var(--cc-panel-border)" }}
+      >
         <p
           className="font-mono text-[10px] tracking-wider uppercase"
           style={{ color: "var(--cc-text-muted)" }}
@@ -301,9 +386,12 @@ export function Season2SidePanel({
           Season 1 · 시놉시스
         </p>
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto p-3">
+      <div className="p-3">
         {synopsis ? (
-          <SynopsisDocument content={synopsis} isFallback={synopsisIsFallback} />
+          <SynopsisDocument
+            content={synopsis}
+            isFallback={synopsisIsFallback}
+          />
         ) : (
           <p
             className="font-mono text-xs leading-relaxed"
@@ -324,6 +412,7 @@ export function Season2SidePanel({
           Season 3 준비중
         </div>
       )}
-    </aside>
+    </>,
+    collapsible ? "" : "min-h-0 flex-1",
   );
 }

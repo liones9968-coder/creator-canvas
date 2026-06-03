@@ -39,6 +39,16 @@ const RIGHT_SLOTS: SlotConfig[] = [
   { id: null, emptyLabel: "???" },
 ];
 
+/** 모바일 2열 그리드 순서 */
+const MOBILE_GRID_SLOTS: SlotConfig[] = [
+  LEFT_SLOTS[0],
+  RIGHT_SLOTS[0],
+  LEFT_SLOTS[1],
+  RIGHT_SLOTS[1],
+  LEFT_SLOTS[2],
+  RIGHT_SLOTS[2],
+];
+
 function CharacterSlot({
   node,
   emptyLabel,
@@ -126,7 +136,7 @@ function CharacterColumn({
   onSelectNode: (node: RelationNode) => void;
 }) {
   return (
-    <div className="flex w-full shrink-0 flex-row gap-2 overflow-x-auto px-3 py-3 md:w-[15%] md:flex-col md:justify-center md:gap-4 md:overflow-hidden md:py-4">
+    <div className="hidden w-[15%] shrink-0 flex-col justify-center gap-4 overflow-hidden px-3 py-4 md:flex">
       {slots.map((slot) => (
         <CharacterSlot
           key={slot.id ?? slot.emptyLabel}
@@ -139,6 +149,58 @@ function CharacterColumn({
   );
 }
 
+function Season2Header({
+  worldName,
+  currentStep,
+  stepLabel,
+}: {
+  worldName: string | null;
+  currentStep: number;
+  stepLabel: string;
+}) {
+  return (
+    <header
+      className="flex shrink-0 flex-col gap-1 border-b px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5"
+      style={{ borderColor: "var(--cc-panel-border)" }}
+    >
+      <h2 className="truncate font-mono text-xs font-semibold tracking-wide sm:text-sm">
+        {worldName ?? "Season 2"} · 성좌
+      </h2>
+      <span
+        className="truncate font-mono text-[11px] sm:text-xs"
+        style={{ color: "var(--cc-text-muted)" }}
+      >
+        STEP {currentStep}
+        {stepLabel ? ` · ${stepLabel}` : ""}
+      </span>
+    </header>
+  );
+}
+
+function Season2SidePanelSlot(props: {
+  mode: SidePanelMode;
+  selectedNode: RelationNode | null;
+  currentStep: number;
+  ensembleError: string | null;
+  onCloseNode: () => void;
+  collapsible: boolean;
+  expanded: boolean;
+  onToggleExpanded: () => void;
+}) {
+  return (
+    <Season2SidePanel
+      mode={props.mode}
+      selectedNode={props.selectedNode}
+      currentStep={props.currentStep}
+      ensembleError={props.ensembleError}
+      onCloseNode={props.onCloseNode}
+      collapsible={props.collapsible}
+      expanded={props.expanded}
+      onToggleExpanded={props.onToggleExpanded}
+    />
+  );
+}
+
 export function Season2Layout() {
   const currentStep = useStoryStore((s) => s.currentStep);
   const worldName = useStoryStore((s) => s.worldName);
@@ -147,6 +209,7 @@ export function Season2Layout() {
   const [sidePanelMode, setSidePanelMode] = useState<SidePanelMode>("synopsis");
   const [selectedNode, setSelectedNode] = useState<RelationNode | null>(null);
   const [ensembleError, setEnsembleError] = useState<string | null>(null);
+  const [sidePanelExpanded, setSidePanelExpanded] = useState(false);
 
   const s2Blocks = useMemo(
     () => blocks.filter((b) => b.season === 2),
@@ -170,13 +233,17 @@ export function Season2Layout() {
       : "창세 완료"
     : (stage?.label ?? "");
 
+  const openSidePanel = () => setSidePanelExpanded(true);
+
   const handleSelectNode = (node: RelationNode) => {
     setSelectedNode(node);
     setSidePanelMode("node");
+    setSidePanelExpanded(true);
   };
 
   const handleOpenEnsemble = async () => {
     setSidePanelMode("ensemble");
+    setSidePanelExpanded(true);
     setEnsembleError(null);
     const errMsg = await runEnsembleGeneration();
     if (errMsg) setEnsembleError(errMsg);
@@ -184,43 +251,43 @@ export function Season2Layout() {
 
   const handleCloseNode = () => {
     setSelectedNode(null);
-    setSidePanelMode(
-      currentStep === SEASON2_BRIDGE_STEP ? "synopsis" : "synopsis",
-    );
+    setSidePanelMode("synopsis");
+  };
+
+  const sidePanelProps = {
+    mode: sidePanelMode,
+    selectedNode,
+    currentStep,
+    ensembleError,
+    onCloseNode: handleCloseNode,
   };
 
   return (
     <div
-      className="flex min-h-screen w-full flex-col"
+      className="flex min-h-dvh w-full flex-col"
       style={{
         background: "var(--cc-canvas-bg)",
         color: "var(--cc-text)",
       }}
     >
-      <header
-        className="flex shrink-0 flex-col gap-1 border-b px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5"
-        style={{ borderColor: "var(--cc-panel-border)" }}
-      >
-        <h2 className="truncate font-mono text-xs font-semibold tracking-wide sm:text-sm">
-          {worldName ?? "Season 2"} · 성좌
-        </h2>
-        <span
-          className="truncate font-mono text-[11px] sm:text-xs"
-          style={{ color: "var(--cc-text-muted)" }}
-        >
-          STEP {currentStep}
-          {stepLabel ? ` · ${stepLabel}` : ""}
-        </span>
-      </header>
+      <Season2Header
+        worldName={worldName}
+        currentStep={currentStep}
+        stepLabel={stepLabel}
+      />
 
-      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto md:flex-row md:overflow-hidden">
+      {/* 데스크톱: 4열 */}
+      <div className="hidden min-h-0 flex-1 flex-row overflow-hidden md:flex">
         <CharacterColumn
           slots={LEFT_SLOTS}
           nodeMap={nodeMap}
           onSelectNode={handleSelectNode}
         />
         <Season2CenterPanel
-          setSidePanelMode={setSidePanelMode}
+          setSidePanelMode={(mode) => {
+            setSidePanelMode(mode);
+            if (mode === "synopsis") openSidePanel();
+          }}
           onOpenEnsemble={handleOpenEnsemble}
         />
         <CharacterColumn
@@ -228,12 +295,51 @@ export function Season2Layout() {
           nodeMap={nodeMap}
           onSelectNode={handleSelectNode}
         />
-        <Season2SidePanel
-          mode={sidePanelMode}
-          selectedNode={selectedNode}
-          currentStep={currentStep}
-          ensembleError={ensembleError}
-          onCloseNode={handleCloseNode}
+        <Season2SidePanelSlot
+          {...sidePanelProps}
+          collapsible={false}
+          expanded
+          onToggleExpanded={() => {}}
+        />
+      </div>
+
+      {/* 모바일: 단일 컬럼 */}
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto md:hidden">
+        <Season2CenterPanel
+          setSidePanelMode={(mode) => {
+            setSidePanelMode(mode);
+            openSidePanel();
+          }}
+          onOpenEnsemble={handleOpenEnsemble}
+        />
+
+        <section
+          className="shrink-0 border-t px-3 py-3"
+          style={{ borderColor: "var(--cc-panel-border)" }}
+        >
+          <p
+            className="mb-2 font-mono text-[10px] uppercase tracking-wider"
+            style={{ color: "var(--cc-text-muted)" }}
+          >
+            성좌 카드
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            {MOBILE_GRID_SLOTS.map((slot) => (
+              <CharacterSlot
+                key={`mobile-${slot.id ?? slot.emptyLabel}`}
+                node={slot.id ? (nodeMap.get(slot.id) ?? null) : null}
+                emptyLabel={slot.emptyLabel}
+                onSelect={handleSelectNode}
+              />
+            ))}
+          </div>
+        </section>
+
+        <Season2SidePanelSlot
+          {...sidePanelProps}
+          collapsible
+          expanded={sidePanelExpanded}
+          onToggleExpanded={() => setSidePanelExpanded((v) => !v)}
         />
       </div>
     </div>

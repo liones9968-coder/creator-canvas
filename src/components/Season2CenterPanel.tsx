@@ -56,7 +56,7 @@ export function Season2CenterPanel({
   if (currentStep === SEASON2_BRIDGE_STEP) {
     return (
       <main
-        className="flex min-h-0 w-full flex-1 flex-col items-center justify-center gap-4 overflow-y-auto border-x px-4 py-6 sm:px-6 sm:py-8 md:w-[50%]"
+        className="flex min-h-0 w-full flex-1 flex-col items-center justify-center gap-4 overflow-y-auto px-4 py-6 sm:px-6 sm:py-8 md:w-[50%] md:border-x"
         style={{
           borderColor: "var(--cc-panel-border)",
           background: "var(--cc-canvas-bg)",
@@ -105,7 +105,7 @@ export function Season2CenterPanel({
 
   return (
       <main
-        className="flex min-h-0 w-full flex-1 flex-col overflow-y-auto border-x px-4 py-4 sm:px-5 sm:py-5 md:w-[50%]"
+        className="flex min-h-0 w-full flex-1 flex-col overflow-y-auto px-4 py-4 sm:px-5 sm:py-5 md:w-[50%] md:border-x"
       style={{
         borderColor: "var(--cc-panel-border)",
         background: "var(--cc-canvas-bg)",
