@@ -31,6 +31,39 @@ body {
   height: 100%;
 }
 
+/* 인트로 — 터미널 스타일 시작 버튼 (키보드 + 터치) */
+.cc-intro-start-btn {
+  border: 1px solid rgba(34, 197, 94, 0.55);
+  background: #000;
+  border-radius: 2px;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.12);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease,
+    transform 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.cc-intro-start-btn:hover {
+  border-color: rgba(212, 168, 75, 0.85);
+  color: #d4a84b;
+  box-shadow:
+    0 0 20px rgba(34, 197, 94, 0.35),
+    0 0 8px rgba(212, 168, 75, 0.25);
+}
+
+.cc-intro-start-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 0 28px rgba(34, 197, 94, 0.45);
+}
+
+.cc-intro-start-btn:focus-visible {
+  outline: 2px solid #22c55e;
+  outline-offset: 3px;
+}
+
 .cc-choice-btn:hover:not(:disabled) {
   border-color: var(--cc-btn-hover-border) !important;
   box-shadow: var(--cc-btn-hover-shadow);
